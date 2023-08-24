@@ -25,7 +25,10 @@ export function MarketDataMap(props: MapProps) {
       controller={true}
       layers={layers}
     >
-      <Map mapboxAccessToken={MAPBOX_ACCESS_TOKEN} />
+      <Map
+       mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+       mapStyle="mapbox://styles/mapbox/light-v9"
+      />
     </DeckGL>
   );
 }
