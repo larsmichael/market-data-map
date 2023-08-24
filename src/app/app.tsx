@@ -1,8 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
-import { MarketDataMap } from './map/map';
-
-import NxWelcome from './nx-welcome';
+import { MarketDataMap } from './MarketDataMap/MarketDataMap';
 
 export function App() {
   return (
