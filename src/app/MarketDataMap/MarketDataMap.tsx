@@ -39,6 +39,7 @@ const MarketDataMap = () => {
         new GeoJsonLayer({
           id: 'geojson-layer',
           data: geoJsonData,
+          pickable: true,
           lineWidthScale: 5,
           lineWidthMinPixels: 2,
           getFillColor: (d: any) => [255, 0, 0, 255],
@@ -47,6 +48,7 @@ const MarketDataMap = () => {
           getElevation: 300,
         }) as any,
       ]}
+      getTooltip={({object}) => object && object.properties.name + '\n' +  object.properties.marketArea}
     >
       <Map
         mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
