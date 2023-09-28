@@ -10,9 +10,9 @@ const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibGFyc21pY2hhZWwiLCJhIjoiY2xsZG1tMWl3MGQ5bTNlcWhiaXp0YWlhNSJ9.Cf3LuoACqQY6pRwE_PhV8Q';
 
 const INITIAL_VIEW_STATE = {
-  longitude: -122.41669,
-  latitude: 37.7853,
-  zoom: 13,
+  longitude: -97.0000,
+  latitude: 41.0000,
+  zoom: 4.5,
   pitch: 0,
   bearing: 0,
 };
@@ -27,9 +27,10 @@ const colorScaleFunction = scaleThreshold<number, RGBAColor>()
 ]);
 
 const MarketDataMap = () => {
-  const [geoJsonData, setGeoJsonData] = useState(null);
-  const [layer1, setLayer1] = useState<boolean>(true);
-  const [layer2, setLayer2] = useState<boolean>(false);
+  const [geoJsonCaiso, setGeoJsonCaiso] = useState(null);
+  const [geoJsonIsone, setGeoJsonIsone] = useState(null);
+  const [layerCaiso, setLayerCaiso] = useState<boolean>(true);
+  const [layerIsone, setLayerIsone] = useState<boolean>(false);
 
   useEffect(() => {
     fetch(
@@ -37,7 +38,20 @@ const MarketDataMap = () => {
     )
       .then((response) => response.json())
       .then((data) => {
-        setGeoJsonData(data);
+        setGeoJsonCaiso(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching GeoJSON:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(
+      'https://raw.githubusercontent.com/larsmichael/market-data-map/master/public/featurecollection-sample-isone.json'
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setGeoJsonIsone(data);
       })
       .catch((error) => {
         console.error('Error fetching GeoJSON:', error);
@@ -50,25 +64,27 @@ const MarketDataMap = () => {
         <input
           type="checkbox"
           style={{ position: 'fixed', top: 10, left: 10, zIndex: 10000 }}
-          onChange={(event) => setLayer1(event.currentTarget.checked)}
+          onChange={(event) => setLayerCaiso(event.currentTarget.checked)}
+          defaultChecked={layerCaiso}
         ></input>CAISO
       </label>
       <label style={{ fontSize: 14, fontFamily: "Helvetica", position: 'fixed', top: 31, left: 35, zIndex: 10000 }}>
         <input
           type="checkbox"
           style={{ position: 'fixed', top: 30, left: 10, zIndex: 10000 }}
-          onChange={(event) => setLayer2(event.currentTarget.checked)}
+          onChange={(event) => setLayerIsone(event.currentTarget.checked)}
+          defaultChecked={layerIsone}
         ></input>ISONE
       </label>
       <DeckGL
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
         layers={[
-          ...(layer1
+          ...(layerCaiso
             ? [
                 new GeoJsonLayer({
                   id: 'geojson-layer',
-                  data: geoJsonData,
+                  data: geoJsonCaiso,
                   pickable: true,
                   lineWidthScale: 5,
                   lineWidthMinPixels: 2,
@@ -82,11 +98,11 @@ const MarketDataMap = () => {
                 }) as any,
               ]
             : []),
-          ...(layer2
+          ...(layerIsone
             ? [
                 new GeoJsonLayer({
                   id: 'geojson-layer',
-                  data: geoJsonData,
+                  data: geoJsonIsone,
                   pickable: true,
                   lineWidthScale: 5,
                   lineWidthMinPixels: 2,
