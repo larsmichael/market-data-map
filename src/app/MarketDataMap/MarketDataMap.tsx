@@ -17,10 +17,12 @@ const INITIAL_VIEW_STATE = {
   bearing: 0,
 };
 
-const colorScaleFunction = scaleThreshold<number, RGBAColor>().domain([25, 50, 75]).range([[255, 0, 0, 100],
-  [255, 255, 0, 100],
-  [255, 165, 0, 100],
-  [0, 128, 0, 100],
+const colorScaleFunction = scaleThreshold<number, RGBAColor>().domain([0, 5, 10]).range(
+[ 
+  [255, 0, 0, 255],
+  [255, 165, 0, 255],
+  [255, 255, 0, 255],
+  [0, 128, 0, 255],
 ]);
 
 const MarketDataMap = () => {
@@ -50,16 +52,18 @@ const MarketDataMap = () => {
           pickable: true,
           lineWidthScale: 5,
           lineWidthMinPixels: 2,
-          pointRadiusScale: 0.5,
-          getFillColor: (d: any) => colorScaleFunction(d.properties.price),
-          getLineColor: (d: any) => colorScaleFunction(d.properties.price),
+          pointRadiusScale: 4,
+          getFillColor: (d: any) => colorScaleFunction(d.properties.priceDiff),
+          getLineColor: (d: any) => colorScaleFunction(d.properties.priceDiff),
           getPointRadius: 100,
           getElevation: 300,
         }) as any,
       ]}
-      getTooltip={({object}) => object && object.properties.name + '\n' +
-        object.properties.marketArea + '\n' +
-        '$' +  (Math.round(object.properties.price * 100) / 100).toFixed(2)
+      getTooltip={({object}) => object && object.properties.marketArea + '\n' +
+        object.properties.name + '\n' +
+        'DayAhead: $' +  (Math.round(object.properties.dayAheadPrice * 100) / 100).toFixed(2) + '\n' +
+        'RealTime: $' +  (Math.round(object.properties.realTimePrice * 100) / 100).toFixed(2) + '\n' +
+        'Diff: $' +  (Math.round(object.properties.priceDiff * 100) / 100).toFixed(2)
       }
     >
       <Map
