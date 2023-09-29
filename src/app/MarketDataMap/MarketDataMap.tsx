@@ -17,6 +17,14 @@ const INITIAL_VIEW_STATE = {
   bearing: 0,
 };
 
+const getToolTip = ({object} :any) => { 
+  return object && object.properties.marketArea + '\n' +
+  object.properties.name + '\n' +
+  'DayAhead: $' +  (Math.round(object.properties.dayAheadPrice * 100) / 100).toFixed(2) + '\n' +
+  'RealTime: $' +  (Math.round(object.properties.realTimePrice * 100) / 100).toFixed(2) + '\n' +
+  'Diff: $' +  (Math.round(object.properties.priceDiff * 100) / 100).toFixed(2)
+}
+
 const colorScaleFunction = scaleThreshold<number, RGBAColor>()
 .domain([0, 5, 10])
 .range([ 
@@ -117,12 +125,7 @@ const MarketDataMap = () => {
               ]
             : []),
         ]}
-        getTooltip={({object}) => object && object.properties.marketArea + '\n' +
-          object.properties.name + '\n' +
-          'DayAhead: $' +  (Math.round(object.properties.dayAheadPrice * 100) / 100).toFixed(2) + '\n' +
-          'RealTime: $' +  (Math.round(object.properties.realTimePrice * 100) / 100).toFixed(2) + '\n' +
-          'Diff: $' +  (Math.round(object.properties.priceDiff * 100) / 100).toFixed(2)
-        }
+        getTooltip={getToolTip}
       >
         <Map
           mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
